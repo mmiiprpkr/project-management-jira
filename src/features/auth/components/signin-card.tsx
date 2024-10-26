@@ -1,22 +1,23 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+
+import { useLoginMutation } from "@/features/auth/api/use-login";
+
+import { 
+  signInSchema, 
+  SignInSchema 
+} from "@/features/auth/validation";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 import { AuthLayout } from "./auth-layout";
 
-const signInSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(1).max(256),
-});
-
-type SignInSchema = z.infer<typeof signInSchema>;
-
 export const SignInCard = () => {
+  const { mutate, isPending } = useLoginMutation();
+
   const {
     register,
     handleSubmit,
@@ -30,7 +31,7 @@ export const SignInCard = () => {
   });
 
   const onSubmit = (data: SignInSchema) => {
-    console.log(data);
+    mutate(data);
   };
 
   return (
@@ -40,6 +41,7 @@ export const SignInCard = () => {
       footerText="Don't have an account?"
       footerLink="/sign-up"
       footerLinkText="Sign Up"
+      disabled={isPending}
     >
       <form 
         className="space-y-4"
@@ -49,18 +51,18 @@ export const SignInCard = () => {
           type="email"
           placeholder="Enter your email"
           {...register("email")}
-          disabled={isSubmitting}
+          disabled={isSubmitting || isPending}
           error={errors.email?.message}
         />
         <Input 
           type="password"
           placeholder="Enter your password"
           {...register("password")}
-          disabled={isSubmitting}
+          disabled={isSubmitting || isPending}
           error={errors.password?.message}
         />
         <Button
-          disabled={isSubmitting}
+          disabled={isSubmitting || isPending}
           size="lg"
           className="w-full"
           type="submit"

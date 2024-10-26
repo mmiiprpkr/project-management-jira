@@ -4,6 +4,8 @@ import "./globals.css";
 
 import { cn } from "@/lib/utils";
 
+import { TanstackQueryProviders } from "@/components/provider/tanstack-query-provider";
+
 const nunito = Nunito({
   subsets: ["latin"],
   variable: "--font-nunito",
@@ -21,14 +23,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={cn(
-          nunito.className,
-          "antialiased min-h-screen"
-        )}
-      >
-        {children}
-      </body>
+        <body
+          className={cn(
+            nunito.className,
+            "antialiased min-h-screen"
+          )}
+        >
+          <TanstackQueryProviders>
+            {children}
+          </TanstackQueryProviders>
+        </body>
     </html>
   );
 }

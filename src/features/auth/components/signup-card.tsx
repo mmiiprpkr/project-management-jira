@@ -1,23 +1,22 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+
+import { useRegisterMutation } from "@/features/auth/api/use-register";
+import { 
+  signUpSchema, 
+  SignUpSchema 
+} from "@/features/auth/validation";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 import { AuthLayout } from "./auth-layout";
 
-const signUpSchema = z.object({
-  name: z.string().min(1),
-  email: z.string().email(),
-  password: z.string().min(8).max(256),
-});
-
-type SignUpSchema = z.infer<typeof signUpSchema>;
-
 export const SignUpCard = () => {
+  const { mutate, isPending } = useRegisterMutation();
+
   const {
     register,
     handleSubmit,
@@ -32,7 +31,7 @@ export const SignUpCard = () => {
   });
 
   const onSubmit = (data: SignUpSchema) => {
-    console.log(data);
+    mutate(data);
   };
 
   const onSocialLogin = (provider: "google" | "github") => {
@@ -47,6 +46,7 @@ export const SignUpCard = () => {
       footerText="Already have an account?"
       footerLink="/sign-in"
       footerLinkText="Login"
+      disabled={isPending}
     >
       <form
         className="space-y-4"
@@ -56,14 +56,14 @@ export const SignUpCard = () => {
           {...register("name")}
           type="text"
           placeholder="Enter your name"
-          disabled={isSubmitting}
+          disabled={isSubmitting || isPending}
           error={errors.name?.message}
         />
         <Input
           {...register("email")}
           type="email"
           placeholder="Enter your email"
-          disabled={isSubmitting}
+          disabled={isSubmitting || isPending}
           error={errors.email?.message}
         />
         <Input
@@ -72,11 +72,11 @@ export const SignUpCard = () => {
           placeholder="Enter your password"
           min={8}
           max={256}
-          disabled={isSubmitting}
+          disabled={isSubmitting || isPending}
           error={errors.password?.message}
         />
         <Button
-          disabled={isSubmitting}
+          disabled={isSubmitting || isPending}
           size="lg"
           className="w-full"
         >
