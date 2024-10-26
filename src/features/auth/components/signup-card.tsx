@@ -43,6 +43,7 @@ export const SignUpCard = () => {
     <AuthLayout
       title="Create your account"
       onSocialLogin={onSocialLogin}
+      description
       footerText="Already have an account?"
       footerLink="/sign-in"
       footerLinkText="Login"
