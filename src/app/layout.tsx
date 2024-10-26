@@ -5,6 +5,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 
 import { TanstackQueryProviders } from "@/components/provider/tanstack-query-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -30,6 +31,7 @@ export default function RootLayout({
           )}
         >
           <TanstackQueryProviders>
+            <Toaster richColors />
             {children}
           </TanstackQueryProviders>
         </body>
